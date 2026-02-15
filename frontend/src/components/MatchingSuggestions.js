@@ -7,6 +7,7 @@ function MatchingSuggestions() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState('');
+  const [selectedStudentData, setSelectedStudentData] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [matches, setMatches] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -32,6 +33,17 @@ function MatchingSuggestions() {
     }
   };
 
+  const handleStudentChange = (e) => {
+    const studentId = e.target.value;
+    setSelectedStudent(studentId);
+    setSelectedSubject(''); // Reset subject selection
+    setMatches([]); // Clear previous matches
+    
+    // Find and set the selected student data
+    const student = students.find(s => s._id === studentId);
+    setSelectedStudentData(student);
+  };
+
   const handleFindMatch = async (e) => {
     e.preventDefault();
     
@@ -46,7 +58,7 @@ function MatchingSuggestions() {
       setMatches(response.data.matches || []);
     } catch (error) {
       console.error('Error finding matches:', error);
-      alert('Error finding matches');
+      alert('Error finding matches. Please try again.');
     } finally {
       setSearchLoading(false);
     }
@@ -87,7 +99,7 @@ function MatchingSuggestions() {
               <label>Select Student</label>
               <select
                 value={selectedStudent}
-                onChange={(e) => setSelectedStudent(e.target.value)}
+                onChange={handleStudentChange}
                 required
               >
                 <option value="">Choose a student...</option>
@@ -100,14 +112,22 @@ function MatchingSuggestions() {
             </div>
 
             <div className="form-group">
-              <label>Subject</label>
-              <input
-                type="text"
+              <label>Select Subject</label>
+              <select
                 value={selectedSubject}
                 onChange={(e) => setSelectedSubject(e.target.value)}
-                placeholder="e.g., Mathematics, Physics"
                 required
-              />
+                disabled={!selectedStudentData}
+              >
+                <option value="">
+                  {selectedStudentData ? 'Choose a subject...' : 'Select student first'}
+                </option>
+                {selectedStudentData?.subjectsNeeded?.map((subject, index) => (
+                  <option key={index} value={subject.name}>
+                    {subject.name} (Current: {subject.currentGrade} → Target: {subject.targetGrade})
+                  </option>
+                ))}
+              </select>
             </div>
 
             <button 

@@ -41,7 +41,8 @@ exports.findBestMatch = async (req, res) => {
       student: {
         id: student._id,
         name: student.name,
-        budget: student.budget.maxHourlyRate
+        gradeLevel: student.gradeLevel,
+        sessionsPerWeek: student.sessionsPerWeek
       },
       subject,
       totalMatches: matches.length,
