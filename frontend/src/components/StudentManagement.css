@@ -27,6 +27,19 @@
   color: #718096;
 }
 
+.pricing-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
+  color: white;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Tw Cen MT', sans-serif;
+  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

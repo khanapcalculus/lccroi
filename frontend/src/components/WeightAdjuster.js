@@ -79,21 +79,16 @@ function WeightAdjuster() {
       return;
     }
 
-    if (chargePercentage < 50 || chargePercentage > 100) {
-      showMessage('Charge percentage must be between 50% and 100%', 'error');
-      return;
-    }
-
     try {
       setSaving(true);
-      await configAPI.updateWeights(weights, chargePercentage, 'admin');
-      showMessage('Configuration updated successfully!', 'success');
+      await configAPI.updateWeights(weights, 100, 'admin'); // Fixed pricing, no percentage needed
+      showMessage('Weights updated successfully!', 'success');
       
       // Refresh to ensure we have the latest
       setTimeout(() => fetchWeights(), 1000);
     } catch (error) {
-      console.error('Error saving configuration:', error);
-      showMessage(error.response?.data?.message || 'Error saving configuration', 'error');
+      console.error('Error saving weights:', error);
+      showMessage(error.response?.data?.message || 'Error saving weights', 'error');
     } finally {
       setSaving(false);
     }
@@ -224,64 +219,6 @@ function WeightAdjuster() {
         ))}
       </div>
 
-      {/* Charge Percentage Configuration */}
-      <div className="charge-percentage-section">
-        <h3>💰 Student Charge Configuration</h3>
-        <p className="section-description">
-          Set what percentage of the student's maximum budget you charge.
-          The difference between this and tutor cost is your profit.
-        </p>
-        
-        <div className="charge-input-group">
-          <div className="charge-controls">
-            <label>Charge Percentage:</label>
-            <div className="charge-slider-wrapper">
-              <input
-                type="range"
-                min="50"
-                max="100"
-                step="1"
-                value={chargePercentage}
-                onChange={(e) => setChargePercentage(parseInt(e.target.value))}
-                className="weight-slider"
-              />
-              <div className="charge-value-display">
-                <input
-                  type="number"
-                  min="50"
-                  max="100"
-                  step="1"
-                  value={chargePercentage}
-                  onChange={(e) => setChargePercentage(parseInt(e.target.value) || 85)}
-                  className="charge-input-number"
-                />
-                <span className="percentage-symbol">%</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="charge-example">
-            <h4>📊 Example Calculation:</h4>
-            <div className="example-row">
-              <span>Student Budget:</span>
-              <strong>$100/hour</strong>
-            </div>
-            <div className="example-row highlight">
-              <span>You Charge ({chargePercentage}%):</span>
-              <strong>${chargePercentage}/hour</strong>
-            </div>
-            <div className="example-row">
-              <span>Tutor Cost:</span>
-              <strong>$50/hour</strong>
-            </div>
-            <div className="example-row profit">
-              <span>Your Profit:</span>
-              <strong>${chargePercentage - 50}/hour ({((chargePercentage - 50) / chargePercentage * 100).toFixed(1)}% margin)</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="adjuster-actions">
         <button 
           className="btn btn-primary"
@@ -328,6 +265,9 @@ function WeightAdjuster() {
             (Expertise × {getPercentage(weights.subjectExpertise)}%)
           </code>
         </div>
+        <p style={{marginTop: '1rem', color: '#718096', fontSize: '0.95rem'}}>
+          ℹ️ Profit is calculated using your <strong>published rates</strong> based on grade level and session frequency.
+        </p>
       </div>
 
       <div className="adjuster-tips">

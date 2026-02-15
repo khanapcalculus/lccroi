@@ -31,7 +31,8 @@ const studentSchema = new mongoose.Schema({
   },
   gradeLevel: {
     type: String,
-    required: true
+    required: true,
+    enum: ['K-5 (Elementary)', '6-8 (Middle School)', '9-12 (High School)', 'College', 'AP', 'IB', 'IGCSE', 'GCSE']
   },
   subjectsNeeded: [{
     name: String,
@@ -57,16 +58,11 @@ const studentSchema = new mongoose.Schema({
     startTime: String,  // Format: "HH:MM"
     endTime: String     // Format: "HH:MM"
   }],
-  budget: {
-    maxHourlyRate: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-    sessionsPerWeek: {
-      type: Number,
-      default: 1
-    }
+  sessionsPerWeek: {
+    type: Number,
+    required: true,
+    enum: [1, 2],
+    default: 1
   },
   performanceMetrics: {
     overallImprovement: {

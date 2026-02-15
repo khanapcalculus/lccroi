@@ -15,15 +15,12 @@ function StudentManagement() {
     parentName: '',
     parentEmail: '',
     parentPhone: '',
-    gradeLevel: '',
+    gradeLevel: 'K-5 (Elementary)',
     learningStyle: 'mixed',
     status: 'active',
     subjectsNeeded: [],
     availability: [],
-    budget: {
-      maxHourlyRate: '',
-      sessionsPerWeek: 1
-    }
+    sessionsPerWeek: 1
   });
 
   useEffect(() => {
@@ -45,22 +42,10 @@ function StudentManagement() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name.startsWith('budget.')) {
-      const budgetField = name.split('.')[1];
-      setFormData(prev => ({
-        ...prev,
-        budget: {
-          ...prev.budget,
-          [budgetField]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleAddSubject = () => {
@@ -95,10 +80,7 @@ function StudentManagement() {
     try {
       const dataToSubmit = {
         ...formData,
-        budget: {
-          maxHourlyRate: parseFloat(formData.budget.maxHourlyRate),
-          sessionsPerWeek: parseInt(formData.budget.sessionsPerWeek) || 1
-        }
+        sessionsPerWeek: parseInt(formData.sessionsPerWeek) || 1
       };
 
       if (editingStudent) {
@@ -128,12 +110,12 @@ function StudentManagement() {
       parentName: student.parentName,
       parentEmail: student.parentEmail,
       parentPhone: student.parentPhone,
-      gradeLevel: student.gradeLevel,
+      gradeLevel: student.gradeLevel || 'K-5 (Elementary)',
       learningStyle: student.learningStyle,
       status: student.status,
       subjectsNeeded: student.subjectsNeeded || [],
       availability: student.availability || [],
-      budget: student.budget || { maxHourlyRate: '', sessionsPerWeek: 1 }
+      sessionsPerWeek: student.sessionsPerWeek || 1
     });
     setShowForm(true);
   };
@@ -159,15 +141,12 @@ function StudentManagement() {
       parentName: '',
       parentEmail: '',
       parentPhone: '',
-      gradeLevel: '',
+      gradeLevel: 'K-5 (Elementary)',
       learningStyle: 'mixed',
       status: 'active',
       subjectsNeeded: [],
       availability: [],
-      budget: {
-        maxHourlyRate: '',
-        sessionsPerWeek: 1
-      }
+      sessionsPerWeek: 1
     });
   };
 
@@ -239,14 +218,21 @@ function StudentManagement() {
 
                 <div className="form-group">
                   <label>Grade Level *</label>
-                  <input
-                    type="text"
+                  <select
                     name="gradeLevel"
                     value={formData.gradeLevel}
                     onChange={handleInputChange}
-                    placeholder="e.g., 10th Grade, College Freshman"
                     required
-                  />
+                  >
+                    <option value="K-5 (Elementary)">K-5 (Elementary)</option>
+                    <option value="6-8 (Middle School)">6-8 (Middle School)</option>
+                    <option value="9-12 (High School)">9-12 (High School)</option>
+                    <option value="College">College</option>
+                    <option value="AP">AP</option>
+                    <option value="IB">IB</option>
+                    <option value="IGCSE">IGCSE</option>
+                    <option value="GCSE">GCSE</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
@@ -314,31 +300,30 @@ function StudentManagement() {
                 </div>
               </div>
 
-              <h3>Budget & Sessions</h3>
+              <h3>Session Frequency</h3>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Max Hourly Rate ($) *</label>
-                  <input
-                    type="number"
-                    name="budget.maxHourlyRate"
-                    value={formData.budget.maxHourlyRate}
+                  <label>Sessions Per Week *</label>
+                  <select
+                    name="sessionsPerWeek"
+                    value={formData.sessionsPerWeek}
                     onChange={handleInputChange}
-                    min="0"
-                    step="0.01"
                     required
-                  />
+                  >
+                    <option value="1">Once a Week</option>
+                    <option value="2">Twice a Week</option>
+                  </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Sessions Per Week</label>
-                  <input
-                    type="number"
-                    name="budget.sessionsPerWeek"
-                    value={formData.budget.sessionsPerWeek}
-                    onChange={handleInputChange}
-                    min="1"
-                  />
-                </div>
+              </div>
+              
+              <div className="pricing-info">
+                <strong>Published Rate:</strong> {
+                  formData.gradeLevel === 'K-5 (Elementary)' ? (formData.sessionsPerWeek == 1 ? '$18/hr' : '$17/hr') :
+                  formData.gradeLevel === '6-8 (Middle School)' ? (formData.sessionsPerWeek == 1 ? '$19/hr' : '$18/hr') :
+                  formData.gradeLevel === '9-12 (High School)' ? (formData.sessionsPerWeek == 1 ? '$21/hr' : '$20/hr') :
+                  formData.gradeLevel === 'College' ? (formData.sessionsPerWeek == 1 ? '$25/hr' : '$23/hr') :
+                  '$20/hr'
+                }
               </div>
 
               <div className="form-section">
@@ -408,7 +393,7 @@ function StudentManagement() {
                 <th>Name</th>
                 <th>Grade</th>
                 <th>Parent</th>
-                <th>Budget</th>
+                <th>Frequency</th>
                 <th>Subjects</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -427,8 +412,7 @@ function StudentManagement() {
                     <small>{student.parentEmail}</small>
                   </td>
                   <td>
-                    ${student.budget?.maxHourlyRate || 0}/hr<br/>
-                    <small>{student.budget?.sessionsPerWeek || 1}x/week</small>
+                    {student.sessionsPerWeek || 1}x/week
                   </td>
                   <td>
                     {student.subjectsNeeded?.map(s => s.name).join(', ') || 'None'}

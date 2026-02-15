@@ -142,22 +142,39 @@ class MatchingAlgorithm {
   }
 
   /**
+   * Get published rate for student based on grade level and sessions per week
+   */
+  getPublishedRate(gradeLevel, sessionsPerWeek) {
+    // Published rates based on pricing table
+    const pricing = {
+      'K-5 (Elementary)': { 1: 18, 2: 17 },
+      '6-8 (Middle School)': { 1: 19, 2: 18 },
+      '9-12 (High School)': { 1: 21, 2: 20 },
+      'College': { 1: 25, 2: 23 },
+      'AP': { 1: 20, 2: 20 },
+      'IB': { 1: 20, 2: 20 },
+      'IGCSE': { 1: 20, 2: 20 },
+      'GCSE': { 1: 20, 2: 20 }
+    };
+
+    return pricing[gradeLevel]?.[sessionsPerWeek] || 20;
+  }
+
+  /**
    * Calculate profit margin score (0-100)
    */
   calculateProfitMarginScore(student, tutor) {
     const tutorCost = tutor.hourlyRate;
-    const studentBudget = student.budget.maxHourlyRate;
+    const publishedRate = this.getPublishedRate(student.gradeLevel, student.sessionsPerWeek);
     
-    // If tutor cost exceeds student budget, return 0
-    if (tutorCost > studentBudget) {
+    // If tutor cost exceeds published rate, return 0 (not profitable)
+    if (tutorCost >= publishedRate) {
       return 0;
     }
 
-    // Calculate potential profit margin
-    // Assume we charge 80-90% of student's max budget
-    const studentCharge = studentBudget * 0.85;
-    const profit = studentCharge - tutorCost;
-    const profitMargin = (profit / studentCharge) * 100;
+    // Calculate profit margin based on published rate
+    const profit = publishedRate - tutorCost;
+    const profitMargin = (profit / publishedRate) * 100;
 
     // Score based on profit margin (higher is better)
     // 30%+ margin = 100 points, 20% = 75 points, 10% = 50 points
@@ -287,28 +304,27 @@ class MatchingAlgorithm {
    * Calculate projected profit for a match
    * @param {Object} student - Student object
    * @param {Object} tutor - Tutor object
-   * @param {Number} chargePercentage - Percentage of student budget to charge (default 85)
+   * @param {Number} chargePercentage - NOT USED ANYMORE (kept for compatibility)
    */
-  calculateProjectedProfit(student, tutor, chargePercentage = 85) {
+  calculateProjectedProfit(student, tutor, chargePercentage = null) {
     const tutorCost = tutor.hourlyRate;
-    const studentBudget = student.budget.maxHourlyRate;
-    const sessionsPerWeek = student.budget.sessionsPerWeek || 1;
+    const publishedRate = this.getPublishedRate(student.gradeLevel, student.sessionsPerWeek);
+    const sessionsPerWeek = student.sessionsPerWeek || 1;
 
-    if (tutorCost > studentBudget) {
+    if (tutorCost >= publishedRate) {
       return {
         perSession: 0,
         perWeek: 0,
         perMonth: 0,
         profitMargin: 0,
         tutorCost,
-        studentCharge: 0
+        studentCharge: publishedRate
       };
     }
 
-    // Charge specified percentage of student's max budget
-    const chargePerSession = studentBudget * (chargePercentage / 100);
-    const profitPerSession = chargePerSession - tutorCost;
-    const profitMargin = (profitPerSession / chargePerSession) * 100;
+    // Profit = Published Rate - Tutor Cost
+    const profitPerSession = publishedRate - tutorCost;
+    const profitMargin = (profitPerSession / publishedRate) * 100;
 
     return {
       perSession: Math.round(profitPerSession * 100) / 100,
@@ -316,7 +332,9 @@ class MatchingAlgorithm {
       perMonth: Math.round(profitPerSession * sessionsPerWeek * 4 * 100) / 100,
       profitMargin: Math.round(profitMargin * 100) / 100,
       tutorCost,
-      studentCharge: Math.round(chargePerSession * 100) / 100
+      studentCharge: publishedRate,
+      gradeLevel: student.gradeLevel,
+      sessionsPerWeek
     };
   }
 
