@@ -11,6 +11,7 @@ function MatchingSuggestions() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [matches, setMatches] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -38,6 +39,7 @@ function MatchingSuggestions() {
     setSelectedStudent(studentId);
     setSelectedSubject(''); // Reset subject selection
     setMatches([]); // Clear previous matches
+    setSearchPerformed(false); // Reset search state
     
     // Find and set the selected student data
     const student = students.find(s => s._id === studentId);
@@ -55,7 +57,14 @@ function MatchingSuggestions() {
     try {
       setSearchLoading(true);
       const response = await matchingAPI.findMatch(selectedStudent, selectedSubject);
-      setMatches(response.data.matches || []);
+      const matchData = response.data.matches || [];
+      setMatches(matchData);
+      setSearchPerformed(true);
+      
+      // Show helpful message if no tutors teach this subject
+      if (matchData.length === 0 && response.data.message) {
+        alert(response.data.message);
+      }
     } catch (error) {
       console.error('Error finding matches:', error);
       alert('Error finding matches. Please try again.');
@@ -139,6 +148,16 @@ function MatchingSuggestions() {
             </button>
           </div>
         </form>
+
+        {searchPerformed && matches.length === 0 && (
+          <div className="no-matches-message">
+            <div className="empty-state">
+              <h3>❌ No Tutors Found</h3>
+              <p>No active tutors teach <strong>{selectedSubject}</strong></p>
+              <p>Please add tutors with expertise in this subject or select a different subject.</p>
+            </div>
+          </div>
+        )}
 
         {matches.length > 0 && (
           <div className="match-results">

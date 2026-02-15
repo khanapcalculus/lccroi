@@ -357,6 +357,34 @@
   }
 }
 
+.no-matches-message {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(245, 101, 101, 0.1) 0%, rgba(237, 137, 54, 0.1) 100%);
+  border-radius: 16px;
+  border: 2px solid rgba(245, 101, 101, 0.3);
+  text-align: center;
+}
+
+.no-matches-message h3 {
+  color: #e53e3e;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Tw Cen MT', sans-serif;
+}
+
+.no-matches-message p {
+  color: #2d3748;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.no-matches-message strong {
+  color: #0099CC;
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;

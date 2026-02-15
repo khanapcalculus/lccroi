@@ -93,7 +93,17 @@ class MatchingAlgorithm {
     const chargePercentage = config.chargePercentage || 85;
     
     const matches = tutors
-      .filter(tutor => tutor.status === 'active')
+      .filter(tutor => {
+        // Only include active tutors
+        if (tutor.status !== 'active') return false;
+        
+        // Only include tutors who teach this subject
+        const teachesSubject = tutor.subjects?.some(s => 
+          s.name.toLowerCase() === subject.toLowerCase()
+        );
+        
+        return teachesSubject;
+      })
       .map(tutor => {
         const score = this.calculateMatchScore(student, tutor, subject, weights);
         return {

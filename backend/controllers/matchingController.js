@@ -36,6 +36,23 @@ exports.findBestMatch = async (req, res) => {
     // Find matches (now async)
     const matches = await matchingAlgorithm.findBestMatch(student, tutors, subject);
 
+    // Check if any tutors teach this subject
+    if (matches.length === 0) {
+      return res.json({
+        success: true,
+        student: {
+          id: student._id,
+          name: student.name,
+          gradeLevel: student.gradeLevel,
+          sessionsPerWeek: student.sessionsPerWeek
+        },
+        subject,
+        totalMatches: 0,
+        matches: [],
+        message: `No active tutors found who teach ${subject}. Please add tutors with this subject expertise.`
+      });
+    }
+
     res.json({
       success: true,
       student: {
