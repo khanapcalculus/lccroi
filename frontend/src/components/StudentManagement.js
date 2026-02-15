@@ -299,19 +299,40 @@ function StudentManagement() {
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="1">Once a Week</option>
-                    <option value="2">Twice a Week</option>
+                    <option value="1">1 Session/Week</option>
+                    <option value="2">2 Sessions/Week (Discounted)</option>
+                    <option value="3">3 Sessions/Week</option>
+                    <option value="4">4 Sessions/Week</option>
+                    <option value="5">5 Sessions/Week</option>
+                    <option value="6">6 Sessions/Week</option>
+                    <option value="7">7 Sessions/Week</option>
                   </select>
                 </div>
               </div>
               
               <div className="pricing-info">
                 <strong>Published Rate:</strong> {
-                  formData.gradeLevel === 'K-5 (Elementary)' ? (formData.sessionsPerWeek == 1 ? '$18/hr' : '$17/hr') :
-                  formData.gradeLevel === '6-8 (Middle School)' ? (formData.sessionsPerWeek == 1 ? '$19/hr' : '$18/hr') :
-                  formData.gradeLevel === '9-12 (High School)' ? (formData.sessionsPerWeek == 1 ? '$21/hr' : '$20/hr') :
-                  formData.gradeLevel === 'College' ? (formData.sessionsPerWeek == 1 ? '$25/hr' : '$23/hr') :
-                  '$20/hr'
+                  (() => {
+                    const sessions = parseInt(formData.sessionsPerWeek);
+                    let rate = '$20/hr';
+                    let note = '';
+                    
+                    if (formData.gradeLevel === 'K-5 (Elementary)') {
+                      rate = sessions === 1 ? '$18/hr' : '$17/hr';
+                      note = sessions >= 3 ? ' (bulk discount applies)' : '';
+                    } else if (formData.gradeLevel === '6-8 (Middle School)') {
+                      rate = sessions === 1 ? '$19/hr' : '$18/hr';
+                      note = sessions >= 3 ? ' (bulk discount applies)' : '';
+                    } else if (formData.gradeLevel === '9-12 (High School)') {
+                      rate = sessions === 1 ? '$21/hr' : '$20/hr';
+                      note = sessions >= 3 ? ' (bulk discount applies)' : '';
+                    } else if (formData.gradeLevel === 'College') {
+                      rate = sessions === 1 ? '$25/hr' : '$23/hr';
+                      note = sessions >= 3 ? ' (bulk discount applies)' : '';
+                    }
+                    
+                    return <span>{rate}{note}</span>;
+                  })()
                 }
               </div>
 

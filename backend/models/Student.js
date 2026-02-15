@@ -61,7 +61,8 @@ const studentSchema = new mongoose.Schema({
   sessionsPerWeek: {
     type: Number,
     required: true,
-    enum: [1, 2],
+    min: 1,
+    max: 7,
     default: 1
   },
   performanceMetrics: {

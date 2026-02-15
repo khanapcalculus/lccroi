@@ -143,6 +143,7 @@ class MatchingAlgorithm {
 
   /**
    * Get published rate for student based on grade level and sessions per week
+   * For 2+ sessions per week, discounted rate applies
    */
   getPublishedRate(gradeLevel, sessionsPerWeek) {
     // Published rates based on pricing table
@@ -157,7 +158,9 @@ class MatchingAlgorithm {
       'GCSE': { 1: 20, 2: 20 }
     };
 
-    return pricing[gradeLevel]?.[sessionsPerWeek] || 20;
+    // For 2+ sessions per week, use the discounted rate (key 2)
+    const rateKey = sessionsPerWeek >= 2 ? 2 : 1;
+    return pricing[gradeLevel]?.[rateKey] || 20;
   }
 
   /**
