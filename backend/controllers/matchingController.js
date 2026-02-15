@@ -163,9 +163,9 @@ exports.calculateProjectedRevenue = async (req, res) => {
         
         if (matches.length > 0 && matches[0].score >= 50) {
           const bestMatch = matches[0];
-          const sessionsPerWeek = student.budget.sessionsPerWeek || 1;
           
-          totalProjectedRevenue += bestMatch.projectedProfit.studentCharge * sessionsPerWeek * 4;
+          // Use projectedProfit which already has the correct calculations
+          totalProjectedRevenue += bestMatch.projectedProfit.studentCharge * (student.sessionsPerWeek || 1) * 4;
           totalProjectedProfit += bestMatch.projectedProfit.perMonth;
           matchCount++;
         }
