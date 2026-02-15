@@ -18,7 +18,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 3px solid #667eea;
+  border-bottom: 3px solid #0099CC;
 }
 
 .navbar-brand h1 {
@@ -26,7 +26,7 @@
   font-weight: 700;
   margin: 0;
   letter-spacing: 1px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -62,15 +62,15 @@
 }
 
 .navbar-menu button:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(0, 153, 204, 0.1);
+  color: #0099CC;
   transform: translateY(-2px);
 }
 
 .navbar-menu button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 153, 204, 0.4);
   border-color: transparent;
 }
 
@@ -123,14 +123,14 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 153, 204, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 153, 204, 0.5);
 }
 
 .btn-primary:disabled {
@@ -205,8 +205,8 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0099CC;
+  box-shadow: 0 0 0 3px rgba(0, 153, 204, 0.1);
   transform: translateY(-1px);
 }
 
@@ -219,7 +219,7 @@
 }
 
 .table th {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
   color: white;
   padding: 1.25rem 1rem;
   text-align: left;
@@ -246,7 +246,7 @@
 }
 
 .table tr:hover {
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(0, 153, 204, 0.05);
 }
 
 .table tr:last-child td:first-child {
