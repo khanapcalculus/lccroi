@@ -1,0 +1,500 @@
+import React, { useState, useEffect } from 'react';
+import { studentAPI } from '../services/api';
+import './StudentManagement.css';
+
+function StudentManagement() {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    parentName: '',
+    parentEmail: '',
+    parentPhone: '',
+    gradeLevel: '',
+    learningStyle: 'mixed',
+    status: 'active',
+    subjectsNeeded: [],
+    availability: [],
+    budget: {
+      maxHourlyRate: '',
+      sessionsPerWeek: 1
+    }
+  });
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await studentAPI.getAll();
+      setStudents(response.data.data || []);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      alert('Error loading students');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name.startsWith('budget.')) {
+      const budgetField = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        budget: {
+          ...prev.budget,
+          [budgetField]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleAddSubject = () => {
+    const name = prompt('Enter subject name:');
+    const currentGrade = prompt('Enter current grade (e.g., B, 75%):');
+    const targetGrade = prompt('Enter target grade (e.g., A, 90%):');
+    const priority = prompt('Enter priority level (1-5):');
+    
+    if (name && currentGrade && targetGrade) {
+      setFormData(prev => ({
+        ...prev,
+        subjectsNeeded: [...prev.subjectsNeeded, {
+          name,
+          currentGrade,
+          targetGrade,
+          priority: parseInt(priority) || 3
+        }]
+      }));
+    }
+  };
+
+  const handleAddAvailability = () => {
+    const day = prompt('Enter day of week (e.g., Monday):');
+    const startTime = prompt('Enter start time (HH:MM format):');
+    const endTime = prompt('Enter end time (HH:MM format):');
+    
+    if (day && startTime && endTime) {
+      setFormData(prev => ({
+        ...prev,
+        availability: [...prev.availability, {
+          dayOfWeek: day,
+          startTime,
+          endTime
+        }]
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const dataToSubmit = {
+        ...formData,
+        budget: {
+          maxHourlyRate: parseFloat(formData.budget.maxHourlyRate),
+          sessionsPerWeek: parseInt(formData.budget.sessionsPerWeek) || 1
+        }
+      };
+
+      if (editingStudent) {
+        await studentAPI.update(editingStudent._id, dataToSubmit);
+        alert('Student updated successfully!');
+      } else {
+        await studentAPI.create(dataToSubmit);
+        alert('Student created successfully!');
+      }
+      
+      setShowForm(false);
+      setEditingStudent(null);
+      resetForm();
+      fetchStudents();
+    } catch (error) {
+      console.error('Error saving student:', error);
+      alert('Error saving student: ' + (error.response?.data?.message || error.message));
+    }
+  };
+
+  const handleEdit = (student) => {
+    setEditingStudent(student);
+    setFormData({
+      name: student.name,
+      email: student.email,
+      phone: student.phone,
+      parentName: student.parentName,
+      parentEmail: student.parentEmail,
+      parentPhone: student.parentPhone,
+      gradeLevel: student.gradeLevel,
+      learningStyle: student.learningStyle,
+      status: student.status,
+      subjectsNeeded: student.subjectsNeeded || [],
+      availability: student.availability || [],
+      budget: student.budget || { maxHourlyRate: '', sessionsPerWeek: 1 }
+    });
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      try {
+        await studentAPI.delete(id);
+        alert('Student deleted successfully!');
+        fetchStudents();
+      } catch (error) {
+        console.error('Error deleting student:', error);
+        alert('Error deleting student');
+      }
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      parentName: '',
+      parentEmail: '',
+      parentPhone: '',
+      gradeLevel: '',
+      learningStyle: 'mixed',
+      status: 'active',
+      subjectsNeeded: [],
+      availability: [],
+      budget: {
+        maxHourlyRate: '',
+        sessionsPerWeek: 1
+      }
+    });
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingStudent(null);
+    resetForm();
+  };
+
+  if (loading) {
+    return (
+      <div className="loading">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="student-management">
+      <div className="page-header">
+        <h1 className="page-title">Student Management</h1>
+        <button 
+          className="btn btn-primary"
+          onClick={() => setShowForm(true)}
+        >
+          ➕ Add New Student
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>{editingStudent ? 'Edit Student' : 'Add New Student'}</h2>
+            <form onSubmit={handleSubmit}>
+              <h3>Student Information</h3>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Student Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Student Email *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Student Phone *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Grade Level *</label>
+                  <input
+                    type="text"
+                    name="gradeLevel"
+                    value={formData.gradeLevel}
+                    onChange={handleInputChange}
+                    placeholder="e.g., 10th Grade, College Freshman"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Learning Style</label>
+                  <select
+                    name="learningStyle"
+                    value={formData.learningStyle}
+                    onChange={handleInputChange}
+                  >
+                    <option value="visual">Visual</option>
+                    <option value="auditory">Auditory</option>
+                    <option value="kinesthetic">Kinesthetic</option>
+                    <option value="reading-writing">Reading/Writing</option>
+                    <option value="mixed">Mixed</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Status</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="graduated">Graduated</option>
+                  </select>
+                </div>
+              </div>
+
+              <h3>Parent Information</h3>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Parent Name *</label>
+                  <input
+                    type="text"
+                    name="parentName"
+                    value={formData.parentName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Parent Email *</label>
+                  <input
+                    type="email"
+                    name="parentEmail"
+                    value={formData.parentEmail}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Parent Phone *</label>
+                  <input
+                    type="tel"
+                    name="parentPhone"
+                    value={formData.parentPhone}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <h3>Budget & Sessions</h3>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Max Hourly Rate ($) *</label>
+                  <input
+                    type="number"
+                    name="budget.maxHourlyRate"
+                    value={formData.budget.maxHourlyRate}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="0.01"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Sessions Per Week</label>
+                  <input
+                    type="number"
+                    name="budget.sessionsPerWeek"
+                    value={formData.budget.sessionsPerWeek}
+                    onChange={handleInputChange}
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Subjects Needed</h3>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary"
+                  onClick={handleAddSubject}
+                >
+                  ➕ Add Subject
+                </button>
+                <div className="subject-list">
+                  {formData.subjectsNeeded.map((subject, index) => (
+                    <div key={index} className="subject-item">
+                      <div>
+                        <strong>{subject.name}</strong><br/>
+                        Current: {subject.currentGrade} → Target: {subject.targetGrade}
+                        (Priority: {subject.priority}/5)
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({
+                            ...prev,
+                            subjectsNeeded: prev.subjectsNeeded.filter((_, i) => i !== index)
+                          }));
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Availability</h3>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary"
+                  onClick={handleAddAvailability}
+                >
+                  ➕ Add Time Slot
+                </button>
+                <div className="availability-list">
+                  {formData.availability.map((slot, index) => (
+                    <div key={index} className="availability-item">
+                      {slot.dayOfWeek}: {slot.startTime} - {slot.endTime}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({
+                            ...prev,
+                            availability: prev.availability.filter((_, i) => i !== index)
+                          }));
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary">
+                  {editingStudent ? 'Update' : 'Create'} Student
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="card">
+        <h2>All Students ({students.length})</h2>
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Parent</th>
+                <th>Budget</th>
+                <th>Subjects</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map(student => (
+                <tr key={student._id}>
+                  <td>
+                    {student.name}<br/>
+                    <small>{student.email}</small>
+                  </td>
+                  <td>{student.gradeLevel}</td>
+                  <td>
+                    {student.parentName}<br/>
+                    <small>{student.parentEmail}</small>
+                  </td>
+                  <td>
+                    ${student.budget?.maxHourlyRate || 0}/hr<br/>
+                    <small>{student.budget?.sessionsPerWeek || 1}x/week</small>
+                  </td>
+                  <td>
+                    {student.subjectsNeeded?.map(s => s.name).join(', ') || 'None'}
+                  </td>
+                  <td>
+                    <span className={`badge badge-${
+                      student.status === 'active' ? 'success' : 
+                      student.status === 'graduated' ? 'info' : 'danger'
+                    }`}>
+                      {student.status}
+                    </span>
+                  </td>
+                  <td>
+                    <button 
+                      className="btn-icon"
+                      onClick={() => handleEdit(student)}
+                      title="Edit"
+                    >
+                      ✏️
+                    </button>
+                    <button 
+                      className="btn-icon"
+                      onClick={() => handleDelete(student._id)}
+                      title="Delete"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default StudentManagement;

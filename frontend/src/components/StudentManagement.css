@@ -1,0 +1,39 @@
+.student-management {
+  animation: fadeIn 0.5s ease;
+}
+
+.modal h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+  font-size: 1.1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.modal h3:first-of-type {
+  margin-top: 0;
+}
+
+.subject-item div {
+  flex: 1;
+}
+
+.subject-item strong {
+  color: #2d3748;
+}
+
+.subject-item small {
+  color: #718096;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

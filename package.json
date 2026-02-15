@@ -1,0 +1,11 @@
+{
+  "name": "lcc360",
+  "version": "1.0.0",
+  "description": "LCC 360 Tutor Resource Optimization System",
+  "scripts": {
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && node server.js",
+    "dev": "cd backend && npm run dev"
+  }
+}

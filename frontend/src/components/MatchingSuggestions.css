@@ -1,0 +1,293 @@
+.matching-suggestions {
+  animation: fadeIn 0.5s ease;
+}
+
+.match-finder-form {
+  margin-top: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.match-results {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.match-results h3 {
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+}
+
+.matches-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.match-card {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid #e2e8f0;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.match-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.match-rank {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.match-score {
+  text-align: center;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.score-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.match-info {
+  flex: 1;
+}
+
+.match-info h4 {
+  font-size: 1.3rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.tutor-details {
+  color: #718096;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.score-breakdown {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.score-breakdown h5 {
+  color: #2d3748;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.breakdown-item span {
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.breakdown-item strong {
+  font-size: 1.1rem;
+  color: #2d3748;
+}
+
+.profit-projection {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.profit-projection h5 {
+  color: #2d3748;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.profit-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.profit-details div {
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.profit-details strong {
+  color: #48bb78;
+  display: block;
+  font-size: 1.1rem;
+  margin-top: 0.25rem;
+}
+
+.match-recommendation {
+  background: #667eea;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.card-description {
+  color: #718096;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+}
+
+.recommendations-table {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+.priority-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.priority-5 {
+  background: #fc8181;
+  color: #742a2a;
+}
+
+.priority-4 {
+  background: #f6ad55;
+  color: #7c2d12;
+}
+
+.priority-3 {
+  background: #f6e05e;
+  color: #744210;
+}
+
+.priority-2 {
+  background: #9ae6b4;
+  color: #22543d;
+}
+
+.priority-1 {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.score-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.score-cell strong {
+  font-size: 1.2rem;
+}
+
+.score-cell small {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.profit-highlight {
+  color: #48bb78;
+  font-weight: 700;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.summary-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.summary-label {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  color: #2d3748;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .match-card {
+    grid-template-columns: 1fr;
+  }
+
+  .profit-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .breakdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
