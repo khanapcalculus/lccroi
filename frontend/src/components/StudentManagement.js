@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { studentAPI } from '../services/api';
 import AvailabilitySelector from './AvailabilitySelector';
+import SubjectSelector from './SubjectSelector';
 import './StudentManagement.css';
 
 function StudentManagement() {
@@ -48,23 +49,11 @@ function StudentManagement() {
     }));
   };
 
-  const handleAddSubject = () => {
-    const name = prompt('Enter subject name:');
-    const currentGrade = prompt('Enter current grade (e.g., B, 75%):');
-    const targetGrade = prompt('Enter target grade (e.g., A, 90%):');
-    const priority = prompt('Enter priority level (1-5):');
-    
-    if (name && currentGrade && targetGrade) {
-      setFormData(prev => ({
-        ...prev,
-        subjectsNeeded: [...prev.subjectsNeeded, {
-          name,
-          currentGrade,
-          targetGrade,
-          priority: parseInt(priority) || 3
-        }]
-      }));
-    }
+  const handleSubjectsChange = (newSubjects) => {
+    setFormData(prev => ({
+      ...prev,
+      subjectsNeeded: newSubjects
+    }));
   };
 
   const handleAvailabilityChange = (newAvailability) => {
@@ -327,36 +316,12 @@ function StudentManagement() {
               </div>
 
               <div className="form-section">
-                <h3>Subjects Needed</h3>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary"
-                  onClick={handleAddSubject}
-                >
-                  ➕ Add Subject
-                </button>
-                <div className="subject-list">
-                  {formData.subjectsNeeded.map((subject, index) => (
-                    <div key={index} className="subject-item">
-                      <div>
-                        <strong>{subject.name}</strong><br/>
-                        Current: {subject.currentGrade} → Target: {subject.targetGrade}
-                        (Priority: {subject.priority}/5)
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            subjectsNeeded: prev.subjectsNeeded.filter((_, i) => i !== index)
-                          }));
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <SubjectSelector
+                  gradeLevel={formData.gradeLevel}
+                  subjects={formData.subjectsNeeded}
+                  onChange={handleSubjectsChange}
+                  label="Subjects Needed"
+                />
               </div>
 
               <div className="form-section">

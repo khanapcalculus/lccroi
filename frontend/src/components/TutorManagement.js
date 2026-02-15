@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { tutorAPI } from '../services/api';
 import AvailabilitySelector from './AvailabilitySelector';
+import TutorSubjectSelector from './TutorSubjectSelector';
 import './TutorManagement.css';
 
 function TutorManagement() {
@@ -44,19 +45,11 @@ function TutorManagement() {
     }));
   };
 
-  const handleAddSubject = () => {
-    const subject = prompt('Enter subject name:');
-    const proficiency = prompt('Enter proficiency level (1-10):');
-    
-    if (subject && proficiency) {
-      setFormData(prev => ({
-        ...prev,
-        subjects: [...prev.subjects, {
-          name: subject,
-          proficiencyLevel: parseInt(proficiency)
-        }]
-      }));
-    }
+  const handleSubjectsChange = (newSubjects) => {
+    setFormData(prev => ({
+      ...prev,
+      subjects: newSubjects
+    }));
   };
 
   const handleAvailabilityChange = (newAvailability) => {
@@ -240,32 +233,11 @@ function TutorManagement() {
               </div>
 
               <div className="form-section">
-                <h3>Subjects</h3>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary"
-                  onClick={handleAddSubject}
-                >
-                  ➕ Add Subject
-                </button>
-                <div className="subject-list">
-                  {formData.subjects.map((subject, index) => (
-                    <div key={index} className="subject-item">
-                      {subject.name} - Proficiency: {subject.proficiencyLevel}/10
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            subjects: prev.subjects.filter((_, i) => i !== index)
-                          }));
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <TutorSubjectSelector
+                  subjects={formData.subjects}
+                  onChange={handleSubjectsChange}
+                  label="Subjects Taught"
+                />
               </div>
 
               <div className="form-section">

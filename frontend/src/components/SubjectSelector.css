@@ -1,0 +1,337 @@
+.subject-selector {
+  width: 100%;
+}
+
+.subject-selector h3 {
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-family: 'Tw Cen MT', sans-serif;
+}
+
+.subject-form {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.form-row-subjects {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.subject-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Tw Cen MT', sans-serif;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subject-select:focus,
+.grade-input:focus,
+.priority-select:focus {
+  outline: none;
+  border-color: #0099CC;
+  box-shadow: 0 0 0 3px rgba(0, 153, 204, 0.1);
+}
+
+.grade-input,
+.priority-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Tw Cen MT', sans-serif;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.btn-add-subject {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Tw Cen MT', sans-serif;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 153, 204, 0.3);
+}
+
+.btn-add-subject:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 153, 204, 0.4);
+}
+
+.subjects-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.empty-subjects {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  background: #f7fafc;
+  border-radius: 12px;
+  font-style: italic;
+}
+
+.subject-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.subject-card:hover {
+  border-color: #0099CC;
+  box-shadow: 0 4px 12px rgba(0, 153, 204, 0.15);
+  transform: translateY(-2px);
+}
+
+.subject-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.subject-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2d3748;
+  font-family: 'Tw Cen MT', sans-serif;
+}
+
+.priority-indicator {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Tw Cen MT', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.priority-indicator.priority-5 {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+}
+
+.priority-indicator.priority-4 {
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  color: white;
+}
+
+.priority-indicator.priority-3 {
+  background: linear-gradient(135deg, #f6e05e 0%, #ecc94b 100%);
+  color: #744210;
+}
+
+.priority-indicator.priority-2 {
+  background: linear-gradient(135deg, #9ae6b4 0%, #68d391 100%);
+  color: white;
+}
+
+.priority-indicator.priority-1 {
+  background: linear-gradient(135deg, #90cdf4 0%, #63b3ed 100%);
+  color: white;
+}
+
+.subject-grades {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f7fafc;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.grade-info {
+  color: #718096;
+  font-size: 0.95rem;
+  font-family: 'Tw Cen MT', sans-serif;
+}
+
+.grade-info strong {
+  color: #2d3748;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.arrow {
+  color: #0099CC;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.btn-remove-subject {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #f56565;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(245, 101, 101, 0.3);
+}
+
+.btn-remove-subject:hover {
+  background: #e53e3e;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.5);
+}
+
+/* Tutor-specific styles */
+.form-row-tutor-subjects {
+  display: grid;
+  grid-template-columns: 2fr 2fr auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.proficiency-input-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.proficiency-slider {
+  flex: 1;
+  height: 8px;
+  border-radius: 5px;
+  background: #e2e8f0;
+  outline: none;
+  cursor: pointer;
+}
+
+.proficiency-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 153, 204, 0.4);
+}
+
+.proficiency-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0099CC 0%, #7B3F9E 100%);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 153, 204, 0.4);
+}
+
+.proficiency-value {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 1.1rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+.tutor-subject-card {
+  padding: 1rem;
+}
+
+.proficiency-badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Tw Cen MT', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.proficiency-badge.proficiency-5 {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.proficiency-badge.proficiency-4 {
+  background: linear-gradient(135deg, #81e6d9 0%, #4fd1c5 100%);
+  color: white;
+}
+
+.proficiency-badge.proficiency-3 {
+  background: linear-gradient(135deg, #fbd38d 0%, #f6ad55 100%);
+  color: #744210;
+}
+
+.proficiency-badge.proficiency-2 {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+}
+
+.proficiency-badge.proficiency-1 {
+  background: linear-gradient(135deg, #feb2b2 0%, #fc8181 100%);
+  color: white;
+}
+
+.proficiency-bar {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+}
+
+.proficiency-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0099CC 0%, #7B3F9E 100%);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .form-row-subjects {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-tutor-subjects {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-add-subject {
+    width: 100%;
+  }
+
+  .subject-grades {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .arrow {
+    display: none;
+  }
+}
