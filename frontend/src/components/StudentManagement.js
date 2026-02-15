@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { studentAPI } from '../services/api';
+import AvailabilitySelector from './AvailabilitySelector';
 import './StudentManagement.css';
 
 function StudentManagement() {
@@ -81,21 +82,11 @@ function StudentManagement() {
     }
   };
 
-  const handleAddAvailability = () => {
-    const day = prompt('Enter day of week (e.g., Monday):');
-    const startTime = prompt('Enter start time (HH:MM format):');
-    const endTime = prompt('Enter end time (HH:MM format):');
-    
-    if (day && startTime && endTime) {
-      setFormData(prev => ({
-        ...prev,
-        availability: [...prev.availability, {
-          dayOfWeek: day,
-          startTime,
-          endTime
-        }]
-      }));
-    }
+  const handleAvailabilityChange = (newAvailability) => {
+    setFormData(prev => ({
+      ...prev,
+      availability: newAvailability
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -384,32 +375,11 @@ function StudentManagement() {
               </div>
 
               <div className="form-section">
-                <h3>Availability</h3>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary"
-                  onClick={handleAddAvailability}
-                >
-                  ➕ Add Time Slot
-                </button>
-                <div className="availability-list">
-                  {formData.availability.map((slot, index) => (
-                    <div key={index} className="availability-item">
-                      {slot.dayOfWeek}: {slot.startTime} - {slot.endTime}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            availability: prev.availability.filter((_, i) => i !== index)
-                          }));
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <h3>Availability Schedule</h3>
+                <AvailabilitySelector
+                  availability={formData.availability}
+                  onChange={handleAvailabilityChange}
+                />
               </div>
 
               <div className="form-actions">

@@ -44,7 +44,7 @@ export const matchingAPI = {
 // Config API
 export const configAPI = {
   getWeights: () => api.get('/config/weights'),
-  updateWeights: (weights, updatedBy) => api.put('/config/weights', { weights, updatedBy }),
+  updateWeights: (weights, chargePercentage, updatedBy) => api.put('/config/weights', { weights, chargePercentage, updatedBy }),
   resetWeights: () => api.post('/config/weights/reset'),
   getHistory: () => api.get('/config/weights/history'),
 };

@@ -28,13 +28,16 @@ class MatchingAlgorithm {
   }
 
   /**
-   * Load weights from database with caching
+   * Load weights and config from database with caching
    */
-  async loadWeights() {
-    // Cache weights for 5 minutes to reduce database queries
+  async loadConfig() {
+    // Cache config for 5 minutes to reduce database queries
     const now = Date.now();
     if (this.weightsCache && this.cacheExpiry && now < this.cacheExpiry) {
-      return this.weightsCache;
+      return { 
+        weights: this.weightsCache,
+        chargePercentage: this.chargePercentage || 85
+      };
     }
 
     try {
@@ -44,18 +47,26 @@ class MatchingAlgorithm {
         // Create default config if it doesn't exist
         config = await SystemConfig.create({
           configType: 'matching_weights',
-          weights: this.weights
+          weights: this.weights,
+          chargePercentage: 85
         });
       }
 
       this.weightsCache = config.weights;
+      this.chargePercentage = config.chargePercentage || 85;
       this.cacheExpiry = now + (5 * 60 * 1000); // 5 minutes
       this.weights = config.weights;
       
-      return config.weights;
+      return {
+        weights: config.weights,
+        chargePercentage: config.chargePercentage || 85
+      };
     } catch (error) {
-      console.error('Error loading weights, using defaults:', error);
-      return this.weights;
+      console.error('Error loading config, using defaults:', error);
+      return {
+        weights: this.weights,
+        chargePercentage: 85
+      };
     }
   }
 
@@ -72,12 +83,14 @@ class MatchingAlgorithm {
    * @param {Object} student - Student object
    * @param {Array} tutors - Array of tutor objects
    * @param {String} subject - Subject to match
-   * @param {Object} customWeights - Optional custom weights to use
+   * @param {Object} customConfig - Optional custom config to use
    * @returns {Object} - Best match with score and breakdown
    */
-  async findBestMatch(student, tutors, subject, customWeights = null) {
-    // Load current weights from database
-    const weights = customWeights || await this.loadWeights();
+  async findBestMatch(student, tutors, subject, customConfig = null) {
+    // Load current config from database
+    const config = customConfig || await this.loadConfig();
+    const weights = config.weights;
+    const chargePercentage = config.chargePercentage || 85;
     
     const matches = tutors
       .filter(tutor => tutor.status === 'active')
@@ -87,9 +100,10 @@ class MatchingAlgorithm {
           tutor,
           score: score.totalScore,
           breakdown: score.breakdown,
-          projectedProfit: this.calculateProjectedProfit(student, tutor),
+          projectedProfit: this.calculateProjectedProfit(student, tutor, chargePercentage),
           compatibilityFactors: score.factors,
-          weightsUsed: weights
+          weightsUsed: weights,
+          chargePercentage
         };
       })
       .sort((a, b) => b.score - a.score);
@@ -271,8 +285,11 @@ class MatchingAlgorithm {
 
   /**
    * Calculate projected profit for a match
+   * @param {Object} student - Student object
+   * @param {Object} tutor - Tutor object
+   * @param {Number} chargePercentage - Percentage of student budget to charge (default 85)
    */
-  calculateProjectedProfit(student, tutor) {
+  calculateProjectedProfit(student, tutor, chargePercentage = 85) {
     const tutorCost = tutor.hourlyRate;
     const studentBudget = student.budget.maxHourlyRate;
     const sessionsPerWeek = student.budget.sessionsPerWeek || 1;
@@ -282,12 +299,14 @@ class MatchingAlgorithm {
         perSession: 0,
         perWeek: 0,
         perMonth: 0,
-        profitMargin: 0
+        profitMargin: 0,
+        tutorCost,
+        studentCharge: 0
       };
     }
 
-    // Charge 85% of student's max budget
-    const chargePerSession = studentBudget * 0.85;
+    // Charge specified percentage of student's max budget
+    const chargePerSession = studentBudget * (chargePercentage / 100);
     const profitPerSession = chargePerSession - tutorCost;
     const profitMargin = (profitPerSession / chargePerSession) * 100;
 

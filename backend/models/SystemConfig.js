@@ -44,6 +44,13 @@ const systemConfigSchema = new mongoose.Schema({
       default: 0.10
     }
   },
+  chargePercentage: {
+    type: Number,
+    required: true,
+    min: 50,
+    max: 100,
+    default: 85
+  },
   updatedAt: {
     type: Date,
     default: Date.now

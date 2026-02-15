@@ -10,6 +10,7 @@ function WeightAdjuster() {
     availability: 0.15,
     subjectExpertise: 0.10
   });
+  const [chargePercentage, setChargePercentage] = useState(85);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
@@ -22,12 +23,17 @@ function WeightAdjuster() {
     try {
       setLoading(true);
       const response = await configAPI.getWeights();
-      if (response.data.data && response.data.data.weights) {
-        setWeights(response.data.data.weights);
+      if (response.data.data) {
+        if (response.data.data.weights) {
+          setWeights(response.data.data.weights);
+        }
+        if (response.data.data.chargePercentage !== undefined) {
+          setChargePercentage(response.data.data.chargePercentage);
+        }
       }
     } catch (error) {
-      console.error('Error fetching weights:', error);
-      showMessage('Error loading weights', 'error');
+      console.error('Error fetching configuration:', error);
+      showMessage('Error loading configuration', 'error');
     } finally {
       setLoading(false);
     }
@@ -73,16 +79,21 @@ function WeightAdjuster() {
       return;
     }
 
+    if (chargePercentage < 50 || chargePercentage > 100) {
+      showMessage('Charge percentage must be between 50% and 100%', 'error');
+      return;
+    }
+
     try {
       setSaving(true);
-      await configAPI.updateWeights(weights, 'admin');
-      showMessage('Weights updated successfully!', 'success');
+      await configAPI.updateWeights(weights, chargePercentage, 'admin');
+      showMessage('Configuration updated successfully!', 'success');
       
       // Refresh to ensure we have the latest
       setTimeout(() => fetchWeights(), 1000);
     } catch (error) {
-      console.error('Error saving weights:', error);
-      showMessage(error.response?.data?.message || 'Error saving weights', 'error');
+      console.error('Error saving configuration:', error);
+      showMessage(error.response?.data?.message || 'Error saving configuration', 'error');
     } finally {
       setSaving(false);
     }
@@ -211,6 +222,64 @@ function WeightAdjuster() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Charge Percentage Configuration */}
+      <div className="charge-percentage-section">
+        <h3>💰 Student Charge Configuration</h3>
+        <p className="section-description">
+          Set what percentage of the student's maximum budget you charge.
+          The difference between this and tutor cost is your profit.
+        </p>
+        
+        <div className="charge-input-group">
+          <div className="charge-controls">
+            <label>Charge Percentage:</label>
+            <div className="charge-slider-wrapper">
+              <input
+                type="range"
+                min="50"
+                max="100"
+                step="1"
+                value={chargePercentage}
+                onChange={(e) => setChargePercentage(parseInt(e.target.value))}
+                className="weight-slider"
+              />
+              <div className="charge-value-display">
+                <input
+                  type="number"
+                  min="50"
+                  max="100"
+                  step="1"
+                  value={chargePercentage}
+                  onChange={(e) => setChargePercentage(parseInt(e.target.value) || 85)}
+                  className="charge-input-number"
+                />
+                <span className="percentage-symbol">%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="charge-example">
+            <h4>📊 Example Calculation:</h4>
+            <div className="example-row">
+              <span>Student Budget:</span>
+              <strong>$100/hour</strong>
+            </div>
+            <div className="example-row highlight">
+              <span>You Charge ({chargePercentage}%):</span>
+              <strong>${chargePercentage}/hour</strong>
+            </div>
+            <div className="example-row">
+              <span>Tutor Cost:</span>
+              <strong>$50/hour</strong>
+            </div>
+            <div className="example-row profit">
+              <span>Your Profit:</span>
+              <strong>${chargePercentage - 50}/hour ({((chargePercentage - 50) / chargePercentage * 100).toFixed(1)}% margin)</strong>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="adjuster-actions">

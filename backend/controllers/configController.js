@@ -15,7 +15,8 @@ exports.getMatchingWeights = async (req, res) => {
           satisfaction: 0.20,
           availability: 0.15,
           subjectExpertise: 0.10
-        }
+        },
+        chargePercentage: 85
       });
     }
 
@@ -35,7 +36,7 @@ exports.getMatchingWeights = async (req, res) => {
 // Update matching weights
 exports.updateMatchingWeights = async (req, res) => {
   try {
-    const { weights, updatedBy } = req.body;
+    const { weights, chargePercentage, updatedBy } = req.body;
 
     // Validate weights sum to 1.0
     const sum = Object.values(weights).reduce((acc, val) => acc + val, 0);
@@ -60,6 +61,17 @@ exports.updateMatchingWeights = async (req, res) => {
       }
     }
 
+    // Validate charge percentage
+    if (chargePercentage !== undefined) {
+      if (chargePercentage < 50 || chargePercentage > 100) {
+        return res.status(400).json({
+          success: false,
+          message: 'Charge percentage must be between 50% and 100%',
+          invalidValue: chargePercentage
+        });
+      }
+    }
+
     let config = await SystemConfig.findOne({ configType: 'matching_weights' });
     
     if (!config) {
@@ -67,24 +79,28 @@ exports.updateMatchingWeights = async (req, res) => {
       config = await SystemConfig.create({
         configType: 'matching_weights',
         weights,
+        chargePercentage: chargePercentage || 85,
         updatedBy: updatedBy || 'admin'
       });
     } else {
       // Update existing config
       config.weights = weights;
+      if (chargePercentage !== undefined) {
+        config.chargePercentage = chargePercentage;
+      }
       config.updatedBy = updatedBy || 'admin';
       await config.save();
     }
 
     res.json({
       success: true,
-      message: 'Weights updated successfully',
+      message: 'Configuration updated successfully',
       data: config
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: 'Error updating weights',
+      message: 'Error updating configuration',
       error: error.message
     });
   }
@@ -100,29 +116,32 @@ exports.resetWeightsToDefault = async (req, res) => {
       availability: 0.15,
       subjectExpertise: 0.10
     };
+    const defaultChargePercentage = 85;
 
     let config = await SystemConfig.findOne({ configType: 'matching_weights' });
     
     if (!config) {
       config = await SystemConfig.create({
         configType: 'matching_weights',
-        weights: defaultWeights
+        weights: defaultWeights,
+        chargePercentage: defaultChargePercentage
       });
     } else {
       config.weights = defaultWeights;
+      config.chargePercentage = defaultChargePercentage;
       config.updatedBy = 'admin';
       await config.save();
     }
 
     res.json({
       success: true,
-      message: 'Weights reset to default values',
+      message: 'Configuration reset to default values',
       data: config
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error resetting weights',
+      message: 'Error resetting configuration',
       error: error.message
     });
   }

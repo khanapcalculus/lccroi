@@ -238,6 +238,121 @@
   margin-right: 0.5rem;
 }
 
+/* Charge Percentage Section */
+.charge-percentage-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.charge-percentage-section h3 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.section-description {
+  color: #718096;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.charge-input-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.charge-controls label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.charge-slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.charge-value-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.charge-input-number {
+  width: 100px;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+  text-align: center;
+}
+
+.percentage-symbol {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.charge-example {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.charge-example h4 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.example-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.example-row:last-child {
+  border-bottom: none;
+}
+
+.example-row span {
+  color: #718096;
+}
+
+.example-row strong {
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.example-row.highlight {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0 -1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
+}
+
+.example-row.highlight span,
+.example-row.highlight strong {
+  color: white;
+}
+
+.example-row.profit strong {
+  color: #48bb78;
+  font-size: 1.2rem;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
