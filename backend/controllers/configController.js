@@ -92,6 +92,10 @@ exports.updateMatchingWeights = async (req, res) => {
       await config.save();
     }
 
+    // Clear the matching algorithm cache so it picks up new values immediately
+    const matchingAlgorithm = require('../services/matchingAlgorithm');
+    matchingAlgorithm.clearCache();
+
     res.json({
       success: true,
       message: 'Configuration updated successfully',

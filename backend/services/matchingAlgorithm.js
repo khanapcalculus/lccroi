@@ -31,7 +31,7 @@ class MatchingAlgorithm {
    * Load weights and config from database with caching
    */
   async loadConfig() {
-    // Cache config for 5 minutes to reduce database queries
+    // Cache config for 1 minute to reduce database queries but stay responsive
     const now = Date.now();
     if (this.weightsCache && this.cacheExpiry && now < this.cacheExpiry) {
       return { 
@@ -54,7 +54,7 @@ class MatchingAlgorithm {
 
       this.weightsCache = config.weights;
       this.chargePercentage = config.chargePercentage || 85;
-      this.cacheExpiry = now + (5 * 60 * 1000); // 5 minutes
+      this.cacheExpiry = now + (60 * 1000); // 1 minute for faster updates
       this.weights = config.weights;
       
       return {
